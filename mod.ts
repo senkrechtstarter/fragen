@@ -3,40 +3,45 @@ import { Handler } from "./chatHandler.ts";
 import { setStatus } from "./api/trello/trello.ts";
 
 let currentHandler: null | Handler = null;
-const listener = Deno.listen({port: 8080})
+const listener = Deno.listen({ port: 8080 });
 
-console.log(`Listening on port 8080`)
+console.log(`Listening on port 8080`);
 
-setStatus('SKRIPT-STATUS: Neu gestartet - kein Stream verbunden')
+setStatus("SKRIPT-STATUS: Neu gestartet - kein Stream verbunden");
 
 for await (const connection of listener) {
   for await (const httpConnection of Deno.serveHttp(connection)) {
-    const url = new URL(httpConnection.request.url)
-    const id = url.searchParams.get('videoID')
+    const url = new URL(httpConnection.request.url);
+    const id = url.searchParams.get("videoID");
 
-    if(id) {
-      if(id === 'stop' || id === '') {
-        currentHandler?.kill()
-        currentHandler = null
-      } else if (id === 'sperren') {
-        if(currentHandler) {
-          currentHandler.sperren(url.searchParams.get('user') as string)
+    if (id) {
+      if (id === "stop" || id === "") {
+        currentHandler?.kill();
+        currentHandler = null;
+      } else if (id === "sperren") {
+        if (currentHandler) {
+          currentHandler.sperren(url.searchParams.get("user") as string);
         }
       } else {
-        if(currentHandler && !currentHandler.killed) {
-          currentHandler.kill()
+        if (currentHandler && !currentHandler.killed) {
+          currentHandler.kill();
         }
-        console.log('SWITCHED TO HANDLER', id)
-        currentHandler = new Handler(await getLiveID(id), id)
+        console.log("SWITCHED TO HANDLER", id);
+        currentHandler = new Handler(await getLiveID(id), id);
       }
     }
 
-    httpConnection.respondWith(new Response(`
+    httpConnection.respondWith(
+      new Response(
+        `
     <!DOCTYPE html>
     <html>
     <body>
-      <h1>Aktueller Stream ${(currentHandler?.killed ? null : currentHandler?.videoID) ?? ' - Nicht Aktiv'}</h1>
-      <p>MODE: ${currentHandler?.mode.join('|')}</p>
+      <h1>Aktueller Stream ${
+          (currentHandler?.killed ? null : currentHandler?.videoID) ??
+            " - Nicht Aktiv"
+        }</h1>
+      <p>MODE: ${currentHandler?.mode.join("|")}</p>
       <form>
         <input type="text" placeholder="VideoID (wie in URL)" name="videoID">
         <div style="margin-top:12px"></div>
@@ -69,14 +74,14 @@ for await (const connection of listener) {
       </script>
     </body>
     </html>
-    `, {
-      headers: {
-        'content-type': 'text/html',
-        'location': '/'
-      }
-    }))
+    `,
+        {
+          headers: {
+            "content-type": "text/html",
+            "location": "/",
+          },
+        },
+      ),
+    );
   }
 }
-
-
-
