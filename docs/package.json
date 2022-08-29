@@ -1,0 +1,17 @@
+{
+  "name": "docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "docs:dev": "vitepress dev .",
+    "docs:build": "vitepress build .",
+    "docs:serve": "vitepress serve ."
+  },
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "devDependencies": {
+    "vitepress": "1.0.0-alpha.4",
+    "vue": "^3.2.37"
+  }
+}

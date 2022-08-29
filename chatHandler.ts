@@ -3,22 +3,18 @@ import { addCard, setStatus } from "./api/trello/trello.ts";
 import { getMSG } from "./api/youtube/youtube.ts";
 import { sleep } from "./helpers.ts";
 import { DATA2 } from "./api/youtube/types.ts";
+import { BLOCKED_USER, MODE } from "./config.ts";
 
 const MIN_TIMEOUT = 16000;
-
-const BLOCKED_USER = [
-  "Nightbot",
-];
-
 export class Handler {
   lastMessageTime: string | null = null;
   killed = false;
   blocked: string[] = [];
+  mode = MODE
 
   constructor(
     private chatID: string,
     public videoID: string,
-    public mode = ["@mo", "@senkrecht", "@senkrechtstarter"],
   ) {
     setStatus("SKRIPT-STATUS: Stream mit VIDEO-ID " + videoID + "verbunden");
     this.handler = this.handler.bind(this);
