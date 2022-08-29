@@ -1,9 +1,12 @@
 import { Message } from "./api/youtube/types.ts";
 import { addCard, setStatus } from "./api/trello/trello.ts";
 import { getMSG } from "./api/youtube/youtube.ts";
-import { sleep } from "./helpers.ts";
 import { DATA2 } from "./api/youtube/types.ts";
 import { BLOCKED_USER, MODE } from "./config.ts";
+
+function sleep(to: number) {
+  return new Promise<void>((res) => setTimeout(res, to));
+}
 
 const MIN_TIMEOUT = 16000;
 export class Handler {
