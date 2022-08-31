@@ -67,7 +67,7 @@ Deno.serve((req) => {
     <body>
       <h1>Starte die Fragenübertragung nach Trello!</h1>
       <div id="1">
-        <button onclick="location.href = 'https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${TWICH_CLIENT_ID}&scope=chat%3Aread+chat%3Aedit&redirect_uri=' + location.origin">Starten</button>
+        <button onclick="location.href = 'https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${TWICH_CLIENT_ID}&scope=chat%3Aread&redirect_uri=' + location.origin">Starten</button>
       </div>
       <div id="2" style="display: none">
         <input id="user" placeholder="Twich-Username">
@@ -115,7 +115,6 @@ async function startTrello(oauth: string, username: string) {
   const ch = tc.joinChannel('arte_tv')
 
   for await (const msg of ch) {
-    console.log(msg.command)
     if(msg.command === 'PRIVMSG') {
       if(msg.badges.moderator) {
         msg.message.startsWith(BAN_CMD)
@@ -133,5 +132,5 @@ async function startTrello(oauth: string, username: string) {
 
 function isFrage(frage: string) {
   frage = frage.toLowerCase()
-  return   MODE.some(v => frage.includes(v + ' ') || frage.includes(v + '\n') || frage.endsWith(v))
+  return MODE.some(v => frage.includes(v + ' ') || frage.includes(v + '\n') || frage.endsWith(v))
 }
