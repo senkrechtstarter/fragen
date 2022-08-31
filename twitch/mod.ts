@@ -105,7 +105,7 @@ Deno.serve((req) => {
     </body>
     </html> `, {headers: {'Content-Type': 'text/html'}})
   }
-}, {port: 80})
+}, {port: 80, hostname: '0.0.0.0'})
 
 async function startTrello(oauth: string, username: string) {
   running = true
