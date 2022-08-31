@@ -67,7 +67,7 @@ Deno.serve((req) => {
     <body>
       <h1>Starte die Fragenübertragung nach Trello!</h1>
       <div id="1">
-        <button onclick="location.href = 'https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${TWICH_CLIENT_ID}&scope=chat%3Aread+chat%3Aedit&redirect_uri=http://localhost'">Starten</button>
+        <button onclick="location.href = 'https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${TWICH_CLIENT_ID}&scope=chat%3Aread+chat%3Aedit&redirect_uri=' + location.origin">Starten</button>
       </div>
       <div id="2" style="display: none">
         <input id="user" placeholder="Twich-Username">
@@ -83,7 +83,7 @@ Deno.serve((req) => {
       }
 
       function start() {
-        location.href = \`http://localhost?access_token=\${auth}&user=\${document.getElementById('user').value}#access_token=\${auth}\`
+        location.href = \`\${location.origin}?access_token=\${auth}&user=\${document.getElementById('user').value}#access_token=\${auth}\`
       }
     </script>
     </body>
@@ -105,7 +105,7 @@ Deno.serve((req) => {
     </body>
     </html> `, {headers: {'Content-Type': 'text/html'}})
   }
-}, {port: 80})
+}, {port: 80, hostname: '0.0.0.0'})
 
 async function startTrello(oauth: string, username: string) {
   running = true
