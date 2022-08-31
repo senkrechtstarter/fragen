@@ -52,9 +52,8 @@ Deno.serve((req) => {
 
   const url = new URL(req.url)
   const auth = url.searchParams.get('access_token')
-  const user = url.searchParams.get('user')
   // const url = `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${TWICH_CLIENT_ID}&scope=chat%3Aread+chat%3Aedit&redirect_uri=http://localhost`;
-  if(!auth || !user || auth === 'null') {
+  if(!auth || auth === 'null') {
     return new Response(`
     <!DOCTYPE html>
     <html lang="en">
@@ -70,8 +69,7 @@ Deno.serve((req) => {
         <button onclick="location.href = 'https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${TWICH_CLIENT_ID}&scope=chat%3Aread&redirect_uri=' + location.origin">Starten</button>
       </div>
       <div id="2" style="display: none">
-        <input id="user" placeholder="Twich-Username">
-        <button onclick="start()">START!</button>
+        Warte auf weiterleitung!
       </div>
 
       <script>
@@ -80,17 +78,14 @@ Deno.serve((req) => {
       if(auth && auth !== 'null') {
         document.getElementById('1').style.display='none'
         document.getElementById('2').style.display='block'
-      }
-
-      function start() {
-        location.href = \`\${location.origin}?access_token=\${auth}&user=\${document.getElementById('user').value}#access_token=\${auth}\`
+        location.href = \`\${location.origin}?access_token=\${auth}\`
       }
     </script>
     </body>
     </html> 
     `, {headers: {'Content-Type': 'text/html'}})
   } else {
-      startTrello(auth, user)
+      startTrello(auth)
       return new Response(`
       <!DOCTYPE html>
     <html lang="en">
@@ -107,9 +102,12 @@ Deno.serve((req) => {
   }
 }, {port: 80, hostname: '0.0.0.0'})
 
-async function startTrello(oauth: string, username: string) {
+async function startTrello(oauth: string) {
   running = true
-  const tc = new TwitchChat(oauth, username);
+
+  const { login } = await fetch('https://id.twitch.tv/oauth2/validate', {headers: {'Authorization': `OAuth ${oauth}`}}).then(v=>v.json())
+
+  const tc = new TwitchChat(oauth, login);
   await tc.connect();  
 
   const ch = tc.joinChannel('arte_tv')
