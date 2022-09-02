@@ -10,7 +10,7 @@ const BAN_CMD = '!fragenBan '
 const BLOCKED_USER = [
   "Nightbot",
 ];
-const MODE = ["@mo", "@senkrecht", "@senkrechtstarter", '@arte', '@arte_tv', '@artetv', '@cedirc', '@doktorwhatson'];
+const MODE = ["@mo", "@senkrecht", "@senkrechtstarter", '@arte', '@arte_tv', '@artetv', '@cedric', '@doktorwhatson'];
 
 function addCard(text: string) {
   const params = new URLSearchParams();
