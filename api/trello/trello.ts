@@ -3,13 +3,14 @@ import {
   T_API_TOKEN,
   T_LIST_ID,
   T_STATUS_CARD_ID,
+  T_SC_LIST_ID
 } from "../../config.ts";
 
-export function addCard(text: string) {
+export function addCard(text: string, superChat = false) {
   const params = new URLSearchParams();
   params.set("token", T_API_TOKEN);
   params.set("key", T_API_KEY);
-  params.set("idList", T_LIST_ID);
+  params.set("idList", superChat ? T_SC_LIST_ID : T_LIST_ID);
 
   params.set("pos", "bottom");
   params.set("name", text);

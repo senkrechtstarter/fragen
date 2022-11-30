@@ -134,17 +134,15 @@ export class Handler {
       text = msg.snippet.textMessageDetails!.messageText;
     }
 
-    if (text && this.isFrage(text, isSuper)) {
-      // Add to trello
-      await addCard(`[${author}]: ${text}`);
+    // Add to trello
+    if(isSuper) {
+      await addCard(`[${author}]: ${text}`, true);
+    } else if (text  && this.isFrage(text)) {
+      await addCard(`[${author}]: ${text}`, false);
     }
   }
 
-  isFrage(text: string, isSuper: boolean) {
-    if (isSuper) {
-      return true;
-    }
-
+  isFrage(text: string) {
     const lText = text.toLowerCase();
 
     return this.mode.some((key) => {
