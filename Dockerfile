@@ -11,4 +11,4 @@ USER deno
 
 ADD . .
 
-CMD ["run", "--allow-net", "mod.ts"]
+CMD ["run", "--allow-net", "--allow-env", "mod.ts"]
