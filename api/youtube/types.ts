@@ -40,6 +40,17 @@ export interface Message {
     membershipGiftingDetails?: {
       giftMembershipsCount: number
       giftMembershipsLevelName: string
+    },
+    superStickerDetails?: {
+      amountMicros: string,
+      currency: string,
+      amountDisplayString: string,
+      tier: 3,
+      superStickerMetadata: {
+        stickerId: string,
+        altText: string,
+        altTextLanguage: string
+      }
     }
   };
   authorDetails: {

@@ -127,6 +127,11 @@ export class Handler {
     let text: string | null = null;
     let isSuper = false;
 
+    if(msg.snippet.type === "superStickerEvent") {
+      text = `SUPER-STICKER ${msg.snippet.superStickerDetails!.amountDisplayString} "${msg.snippet.superStickerDetails!.superStickerMetadata.altText}"`
+      isSuper = true;
+    }
+
     if (msg.snippet.type === "superChatEvent") {
       text = msg.snippet.superChatDetails!.userComment;
       author += ` (${msg.snippet.superChatDetails!.amountDisplayString})`;
@@ -177,5 +182,5 @@ const ignore: Message["snippet"]["type"][] = [
   "sponsorOnlyModeStartedEvent",
   "sponsorOnlyModeEndedEvent",
   "messageDeletedEvent",
-  "superStickerEvent",
+  // "superStickerEvent",
 ];
