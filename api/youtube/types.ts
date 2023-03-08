@@ -37,6 +37,10 @@ export interface Message {
       userComment: string;
       tier: number;
     };
+    membershipGiftingDetails?: {
+      giftMembershipsCount: number
+      giftMembershipsLevelName: string
+    }
   };
   authorDetails: {
     channelId: string;

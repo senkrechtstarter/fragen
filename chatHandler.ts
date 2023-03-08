@@ -40,6 +40,7 @@ export class Handler {
     let page = null;
     let last = "";
     while (true) {
+      try {
       if (this.killed) return;
 
       const data: DATA2 = await getMSG(this.chatID, page);
@@ -64,6 +65,7 @@ export class Handler {
           this.lastMessageTime !== null &&
           el.snippet.publishedAt <= this.lastMessageTime
         ) {
+          console.log(data.pollingIntervalMillis)
           setTimeout(this.handler, data.pollingIntervalMillis);
           this.lastMessageTime = last || data.items[0]?.snippet.publishedAt ||
             this.lastMessageTime;
@@ -88,6 +90,11 @@ export class Handler {
       }
       console.log(data.pollingIntervalMillis);
       await sleep(data.pollingIntervalMillis);
+    } catch (ex) {
+      console.log(ex)
+      // Ich schlafe für 30s
+      await sleep(30000)
+    }
     }
   }
 
@@ -95,6 +102,10 @@ export class Handler {
     if (msg.snippet.type === "chatEndedEvent") {
       this.kill();
       return;
+    }
+
+    if(msg.snippet.type === "superStickerEvent") {
+      console.log(msg)
     }
 
     if (ignore.includes(msg.snippet.type)) {
@@ -134,6 +145,12 @@ export class Handler {
       text = msg.snippet.textMessageDetails!.messageText;
     }
 
+    if(msg.snippet.type === 'membershipGiftingEvent') {
+      isSuper = true
+      author = msg.snippet.displayMessage.split('gifted')[0].trim()
+      text = `${msg.snippet.membershipGiftingDetails?.giftMembershipsCount} Mitgliedschaften verschenkt von Level ${msg.snippet.membershipGiftingDetails?.giftMembershipsLevelName}` 
+    }
+
     // Add to trello
     if(isSuper) {
       await addCard(`[${author}]: ${text}`, true);
@@ -152,7 +169,7 @@ export class Handler {
 }
 
 const ignore: Message["snippet"]["type"][] = [
-  "membershipGiftingEvent",
+  // "membershipGiftingEvent",
   "tombstone",
   "userBannedEvent",
   "giftMembershipReceivedEvent",
